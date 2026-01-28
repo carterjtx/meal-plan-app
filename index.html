@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recipe Generator - Meal Planning Made Easy</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🍳</span>
+                <h1>RecipeAI</h1>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-tab="generator">Recipe Generator</button>
+                <button class="nav-tab" data-tab="meal-plan">Meal Planner</button>
+                <button class="nav-tab" data-tab="shopping">Shopping List</button>
+                <button class="nav-tab" data-tab="favorites">Favorites</button>
+            </nav>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== MOBILE NAV ==================== -->
+    <nav class="mobile-nav">
+        <button class="nav-tab active" data-tab="generator">Recipe Generator</button>
+        <button class="nav-tab" data-tab="meal-plan">Meal Planner</button>
+        <button class="nav-tab" data-tab="shopping">Shopping List</button>
+        <button class="nav-tab" data-tab="favorites">Favorites</button>
+    </nav>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+        <!-- ========== FILTERS SIDEBAR ========== -->
+        <aside class="filters-sidebar">
+            <div class="filters-header">
+                <h2>Filters & Preferences</h2>
+                <button class="toggle-filters-btn" aria-label="Toggle filters">
+                    <span class="arrow">▼</span>
+                </button>
+            </div>
+
+            <div class="filters-content">
+                <!-- Dietary Restrictions -->
+                <div class="filter-group">
+                    <h3>Dietary Restrictions</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="vegan">
+                            <span class="checkmark"></span>
+                            Vegan
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="vegetarian">
+                            <span class="checkmark"></span>
+                            Vegetarian
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="gluten-free">
+                            <span class="checkmark"></span>
+                            Gluten-Free
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="dairy-free">
+                            <span class="checkmark"></span>
+                            Dairy-Free
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="keto">
+                            <span class="checkmark"></span>
+                            Keto
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="dietary" value="nut-free">
+                            <span class="checkmark"></span>
+                            Nut-Free
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Difficulty Slider -->
+                <div class="filter-group">
+                    <h3>Difficulty Level</h3>
+                    <div class="slider-container">
+                        <input type="range" id="difficulty" min="1" max="3" value="2" class="slider">
+                        <div class="slider-labels">
+                            <span>Beginner</span>
+                            <span>Intermediate</span>
+                            <span>Advanced</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Serving Size -->
+                <div class="filter-group">
+                    <h3>Serving Size</h3>
+                    <div class="number-input-container">
+                        <button class="number-btn minus" data-target="servings">−</button>
+                        <input type="number" id="servings" value="2" min="1" max="12" class="number-input">
+                        <button class="number-btn plus" data-target="servings">+</button>
+                    </div>
+                </div>
+
+                <!-- Cook Time -->
+                <div class="filter-group">
+                    <h3>Maximum Cook Time</h3>
+                    <select id="cook-time" class="select-input">
+                        <option value="any">Any Duration</option>
+                        <option value="15">Under 15 minutes</option>
+                        <option value="30">Under 30 minutes</option>
+                        <option value="60">Under 1 hour</option>
+                    </select>
+                </div>
+
+                <!-- Leftover Mode -->
+                <div class="filter-group">
+                    <h3>Leftover Mode</h3>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="leftover-mode">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Prioritize using ingredients quickly</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ========== CONTENT AREA ========== -->
+        <div class="content-area">
+            <!-- Recipe Generator Tab -->
+            <section id="generator-tab" class="tab-content active">
+                <div class="section-card">
+                    <h2>Generate Recipe from Ingredients</h2>
+                    <p class="section-desc">Enter the ingredients you have on hand, and our AI will create a delicious recipe for you.</p>
+
+                    <div class="ingredient-input-area">
+                        <textarea
+                            id="ingredients-input"
+                            placeholder="Enter your ingredients separated by commas...&#10;Example: chicken breast, garlic, olive oil, lemon, rosemary"
+                            rows="4"
+                        ></textarea>
+                        <div class="input-actions">
+                            <button id="generate-recipe-btn" class="btn btn-primary">
+                                <span class="btn-icon">✨</span>
+                                Generate Recipe
+                            </button>
+                            <button id="whats-missing-btn" class="btn btn-secondary">
+                                <span class="btn-icon">🔍</span>
+                                What's Missing?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Missing Ingredients Suggestion -->
+                <div id="missing-ingredients" class="section-card hidden">
+                    <h3>Suggested Ingredients to Add</h3>
+                    <p class="section-desc">Adding these ingredients would unlock more recipe options:</p>
+                    <div id="missing-list" class="missing-list"></div>
+                </div>
+
+                <!-- Generated Recipe Display -->
+                <div id="recipe-result" class="section-card hidden">
+                    <div class="recipe-header">
+                        <div class="recipe-title-row">
+                            <h2 id="recipe-title">Recipe Name</h2>
+                            <button class="favorite-btn" data-recipe-id="" aria-label="Save to favorites">
+                                <span class="heart-icon">♡</span>
+                            </button>
+                        </div>
+                        <div class="recipe-meta">
+                            <span class="meta-item"><span class="meta-icon">⏱️</span> <span id="recipe-time">30 min</span></span>
+                            <span class="meta-item"><span class="meta-icon">👥</span> <span id="recipe-servings">2 servings</span></span>
+                            <span class="meta-item"><span class="meta-icon">📊</span> <span id="recipe-difficulty">Intermediate</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Nutrition Info -->
+                    <div class="nutrition-card">
+                        <h4>Nutrition per Serving</h4>
+                        <div class="nutrition-grid">
+                            <div class="nutrition-item">
+                                <span class="nutrition-value" id="calories">0</span>
+                                <span class="nutrition-label">Calories</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-value" id="protein">0g</span>
+                                <span class="nutrition-label">Protein</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-value" id="carbs">0g</span>
+                                <span class="nutrition-label">Carbs</span>
+                            </div>
+                            <div class="nutrition-item">
+                                <span class="nutrition-value" id="fat">0g</span>
+                                <span class="nutrition-label">Fat</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ingredients List -->
+                    <div class="recipe-section">
+                        <h3>Ingredients</h3>
+                        <ul id="recipe-ingredients" class="ingredients-list"></ul>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="recipe-section">
+                        <div class="instructions-header">
+                            <h3>Instructions</h3>
+                            <label class="toggle-switch small">
+                                <input type="checkbox" id="step-by-step-mode">
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Step-by-step mode</span>
+                            </label>
+                        </div>
+                        <div id="recipe-instructions" class="instructions-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Meal Plan Tab -->
+            <section id="meal-plan-tab" class="tab-content">
+                <div class="section-card">
+                    <div class="meal-plan-header">
+                        <h2>Monthly Meal Planner</h2>
+                        <button id="generate-meal-plan-btn" class="btn btn-primary">
+                            <span class="btn-icon">📅</span>
+                            Generate Monthly Plan
+                        </button>
+                    </div>
+                    <p class="section-desc">Generate a complete monthly meal plan with AI-powered recipe suggestions for breakfast, lunch, and dinner.</p>
+                </div>
+
+                <!-- Calendar Navigation -->
+                <div class="calendar-nav">
+                    <button id="prev-month" class="nav-arrow" aria-label="Previous month">❮</button>
+                    <h3 id="current-month">January 2026</h3>
+                    <button id="next-month" class="nav-arrow" aria-label="Next month">❯</button>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <span>Sun</span>
+                        <span>Mon</span>
+                        <span>Tue</span>
+                        <span>Wed</span>
+                        <span>Thu</span>
+                        <span>Fri</span>
+                        <span>Sat</span>
+                    </div>
+                    <div id="calendar-grid" class="calendar-grid"></div>
+                </div>
+
+                <!-- Cooking Tips Section -->
+                <div id="cooking-tips" class="section-card">
+                    <h3>🍳 Cooking Tips for This Month</h3>
+                    <div id="tips-list" class="tips-list">
+                        <p class="empty-state">Generate a meal plan to see personalized cooking tips!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Shopping List Tab -->
+            <section id="shopping-tab" class="tab-content">
+                <div class="section-card">
+                    <div class="shopping-header">
+                        <h2>Shopping List</h2>
+                        <div class="shopping-actions">
+                            <button id="clear-checked" class="btn btn-secondary">
+                                <span class="btn-icon">🗑️</span>
+                                Clear Checked
+                            </button>
+                            <button id="copy-list" class="btn btn-primary">
+                                <span class="btn-icon">📋</span>
+                                Copy to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                    <p class="section-desc">Your auto-generated shopping list based on your meal plan, organized by category.</p>
+                </div>
+
+                <div id="shopping-list-container" class="shopping-list-container">
+                    <p class="empty-state">Generate a meal plan to create your shopping list!</p>
+                </div>
+            </section>
+
+            <!-- Favorites Tab -->
+            <section id="favorites-tab" class="tab-content">
+                <div class="section-card">
+                    <h2>Your Favorite Recipes</h2>
+                    <p class="section-desc">Your saved recipes for quick access.</p>
+                </div>
+
+                <div id="favorites-container" class="favorites-grid">
+                    <p class="empty-state">No favorites yet! Click the heart icon on any recipe to save it here.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ==================== RECIPE MODAL ==================== -->
+    <div id="recipe-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <div class="modal-header">
+                <div class="modal-title-row">
+                    <h2 id="modal-recipe-title">Recipe Name</h2>
+                    <button class="favorite-btn" data-recipe-id="" aria-label="Save to favorites">
+                        <span class="heart-icon">♡</span>
+                    </button>
+                </div>
+                <div class="recipe-meta">
+                    <span class="meta-item"><span class="meta-icon">⏱️</span> <span id="modal-recipe-time">30 min</span></span>
+                    <span class="meta-item"><span class="meta-icon">👥</span> <span id="modal-recipe-servings">2 servings</span></span>
+                    <span class="meta-item"><span class="meta-icon">📊</span> <span id="modal-recipe-difficulty">Intermediate</span></span>
+                </div>
+            </div>
+
+            <div class="nutrition-card">
+                <h4>Nutrition per Serving</h4>
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <span class="nutrition-value" id="modal-calories">0</span>
+                        <span class="nutrition-label">Calories</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value" id="modal-protein">0g</span>
+                        <span class="nutrition-label">Protein</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value" id="modal-carbs">0g</span>
+                        <span class="nutrition-label">Carbs</span>
+                    </div>
+                    <div class="nutrition-item">
+                        <span class="nutrition-value" id="modal-fat">0g</span>
+                        <span class="nutrition-label">Fat</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-section">
+                <h3>Ingredients</h3>
+                <ul id="modal-ingredients" class="ingredients-list"></ul>
+            </div>
+
+            <div class="recipe-section">
+                <div class="instructions-header">
+                    <h3>Instructions</h3>
+                    <label class="toggle-switch small">
+                        <input type="checkbox" id="modal-step-by-step-mode">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Step-by-step mode</span>
+                    </label>
+                </div>
+                <div id="modal-instructions" class="instructions-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== LOADING OVERLAY ==================== -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p id="loading-text">Generating your recipe...</p>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST NOTIFICATIONS ==================== -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
