@@ -950,6 +950,56 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Meal Type Selection */
+.meal-selection {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.meal-selection h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.meal-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+}
+
+.meal-type-checkbox {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.meal-type-checkbox:hover {
+    background: var(--primary-light);
+}
+
+.meal-type-checkbox input:checked + .checkmark + .meal-type-icon {
+    transform: scale(1.1);
+}
+
+.meal-type-icon {
+    font-size: 1.25rem;
+    transition: transform var(--transition-fast);
+}
+
+.meal-plan-actions {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 /* Cooking Tips */
@@ -1507,6 +1557,24 @@ body {
 
     .ingredients-list {
         grid-template-columns: 1fr;
+    }
+
+    .meal-checkboxes {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .meal-type-checkbox {
+        width: 100%;
+    }
+
+    .meal-plan-actions {
+        flex-direction: column;
+    }
+
+    .meal-plan-actions .btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 

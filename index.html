@@ -239,7 +239,37 @@
                             Generate Monthly Plan
                         </button>
                     </div>
-                    <p class="section-desc">Generate a complete monthly meal plan with AI-powered recipe suggestions for breakfast, lunch, and dinner.</p>
+                    <p class="section-desc">Generate a complete monthly meal plan with AI-powered recipe suggestions. Choose which meals to include.</p>
+
+                    <!-- Meal Type Selection -->
+                    <div class="meal-selection">
+                        <h4>Include in meal plan:</h4>
+                        <div class="meal-checkboxes">
+                            <label class="checkbox-label meal-type-checkbox">
+                                <input type="checkbox" name="meal-type" value="breakfast" checked>
+                                <span class="checkmark"></span>
+                                <span class="meal-type-icon">🌅</span> Breakfast
+                            </label>
+                            <label class="checkbox-label meal-type-checkbox">
+                                <input type="checkbox" name="meal-type" value="lunch" checked>
+                                <span class="checkmark"></span>
+                                <span class="meal-type-icon">☀️</span> Lunch
+                            </label>
+                            <label class="checkbox-label meal-type-checkbox">
+                                <input type="checkbox" name="meal-type" value="dinner" checked>
+                                <span class="checkmark"></span>
+                                <span class="meal-type-icon">🌙</span> Dinner
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Clear Meal Plan Button -->
+                    <div class="meal-plan-actions">
+                        <button id="clear-meal-plan-btn" class="btn btn-secondary">
+                            <span class="btn-icon">🗑️</span>
+                            Clear Current Plan
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Calendar Navigation -->
