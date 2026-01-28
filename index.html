@@ -21,6 +21,9 @@
                 <button class="nav-tab" data-tab="shopping">Shopping List</button>
                 <button class="nav-tab" data-tab="favorites">Favorites</button>
             </nav>
+            <button id="settings-btn" class="settings-btn" aria-label="API Settings" title="API Settings">
+                ⚙️
+            </button>
             <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
@@ -363,6 +366,36 @@
                     </label>
                 </div>
                 <div id="modal-instructions" class="instructions-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SETTINGS MODAL ==================== -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content settings-modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <h2>API Settings</h2>
+            <p class="section-desc">Enter your OpenAI API key to enable AI-powered recipe generation. Your key is stored only in your browser session and is never saved to any server.</p>
+
+            <div class="settings-form">
+                <label for="api-key-input">OpenAI API Key</label>
+                <input type="password" id="api-key-input" placeholder="sk-proj-..." class="api-key-input">
+                <div class="settings-actions">
+                    <button id="save-api-key" class="btn btn-primary">Save Key</button>
+                    <button id="clear-api-key" class="btn btn-secondary">Clear Key</button>
+                </div>
+                <p class="api-status" id="api-status">Status: <span class="status-indicator">No API key set (using demo mode)</span></p>
+            </div>
+
+            <div class="settings-help">
+                <h4>How to get an API key:</h4>
+                <ol>
+                    <li>Go to <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
+                    <li>Sign in or create an account</li>
+                    <li>Click "Create new secret key"</li>
+                    <li>Copy and paste it here</li>
+                </ol>
             </div>
         </div>
     </div>

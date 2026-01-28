@@ -5,18 +5,33 @@
  */
 
 // ==================== API CONFIGURATION ====================
-// TODO: Replace with your actual API key
+// API key is stored in sessionStorage for security (never committed to code)
 const API_CONFIG = {
-    // OpenAI API Configuration
-    apiKey: 'YOUR_API_KEY_HERE', // <-- ADD YOUR OPENAI API KEY HERE
+    get apiKey() {
+        return sessionStorage.getItem('openai_api_key') || '';
+    },
+    set apiKey(value) {
+        sessionStorage.setItem('openai_api_key', value);
+    },
     endpoint: 'https://api.openai.com/v1/chat/completions',
     model: 'gpt-3.5-turbo', // or 'gpt-4' for better results
-
-    // Alternative: Anthropic Claude API
-    // apiKey: 'YOUR_ANTHROPIC_API_KEY_HERE',
-    // endpoint: 'https://api.anthropic.com/v1/messages',
-    // model: 'claude-3-sonnet-20240229',
 };
+
+/**
+ * Prompt user for API key if not set
+ * @returns {boolean} True if API key is available
+ */
+function ensureApiKey() {
+    if (API_CONFIG.apiKey) return true;
+
+    const key = prompt('Enter your OpenAI API key to enable AI features:\n(This is stored only in your browser session and never sent anywhere except OpenAI)');
+    if (key && key.startsWith('sk-')) {
+        API_CONFIG.apiKey = key;
+        showToast('API key saved for this session!', 'success');
+        return true;
+    }
+    return false;
+}
 
 // ==================== APPLICATION STATE ====================
 // Central state management for the application
@@ -86,6 +101,14 @@ const DOM = {
     modalOverlay: document.querySelector('.modal-overlay'),
     modalClose: document.querySelector('.modal-close'),
     modalStepByStepToggle: document.getElementById('modal-step-by-step-mode'),
+
+    // Settings Modal
+    settingsBtn: document.getElementById('settings-btn'),
+    settingsModal: document.getElementById('settings-modal'),
+    apiKeyInput: document.getElementById('api-key-input'),
+    saveApiKeyBtn: document.getElementById('save-api-key'),
+    clearApiKeyBtn: document.getElementById('clear-api-key'),
+    apiStatus: document.getElementById('api-status'),
 
     // Loading & Toast
     loadingOverlay: document.getElementById('loading-overlay'),
@@ -178,9 +201,19 @@ function setupEventListeners() {
     DOM.modalClose?.addEventListener('click', closeModal);
     DOM.modalStepByStepToggle?.addEventListener('change', toggleModalStepByStep);
 
+    // Settings Modal
+    DOM.settingsBtn?.addEventListener('click', openSettingsModal);
+    DOM.settingsModal?.querySelector('.modal-overlay')?.addEventListener('click', closeSettingsModal);
+    DOM.settingsModal?.querySelector('.modal-close')?.addEventListener('click', closeSettingsModal);
+    DOM.saveApiKeyBtn?.addEventListener('click', saveApiKey);
+    DOM.clearApiKeyBtn?.addEventListener('click', clearApiKey);
+
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        if (e.key === 'Escape') {
+            closeModal();
+            closeSettingsModal();
+        }
     });
 }
 
@@ -305,7 +338,7 @@ function getFilterPrompt() {
  */
 async function callAI(prompt) {
     // Check if API key is configured
-    if (API_CONFIG.apiKey === 'YOUR_API_KEY_HERE') {
+    if (!API_CONFIG.apiKey) {
         // Return mock data for demo purposes
         return getMockResponse(prompt);
     }
@@ -964,6 +997,71 @@ function toggleModalStepByStep() {
 function closeModal() {
     DOM.modal?.classList.remove('open');
     document.body.style.overflow = '';
+}
+
+/**
+ * Open the settings modal
+ */
+function openSettingsModal() {
+    DOM.settingsModal?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    updateApiStatus();
+}
+
+/**
+ * Close the settings modal
+ */
+function closeSettingsModal() {
+    DOM.settingsModal?.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+/**
+ * Save API key from input
+ */
+function saveApiKey() {
+    const key = DOM.apiKeyInput?.value.trim();
+
+    if (!key) {
+        showToast('Please enter an API key', 'error');
+        return;
+    }
+
+    if (!key.startsWith('sk-')) {
+        showToast('Invalid API key format. Should start with "sk-"', 'error');
+        return;
+    }
+
+    API_CONFIG.apiKey = key;
+    DOM.apiKeyInput.value = '';
+    updateApiStatus();
+    showToast('API key saved for this session!', 'success');
+}
+
+/**
+ * Clear stored API key
+ */
+function clearApiKey() {
+    sessionStorage.removeItem('openai_api_key');
+    DOM.apiKeyInput.value = '';
+    updateApiStatus();
+    showToast('API key cleared. Using demo mode.', 'success');
+}
+
+/**
+ * Update the API status display
+ */
+function updateApiStatus() {
+    const statusIndicator = DOM.apiStatus?.querySelector('.status-indicator');
+    if (statusIndicator) {
+        if (API_CONFIG.apiKey) {
+            statusIndicator.textContent = 'API key set ✓';
+            statusIndicator.classList.add('active');
+        } else {
+            statusIndicator.textContent = 'No API key set (using demo mode)';
+            statusIndicator.classList.remove('active');
+        }
+    }
 }
 
 // ==================== SHOPPING LIST ====================
